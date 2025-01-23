@@ -14,21 +14,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
-
     @Autowired
     private PostRepository postRepository;
 
     @Autowired
     private PostEntityMapper postEntityMapper;
 
+
     @Override
     public List<PostDto> getAllPosts() {
         List<PostEntity> postEntities=postRepository.findAll();
         if(postEntities!=null)
         {
-           return postEntities.stream()
+           List<PostDto> postDtos= postEntities.stream()
                    .map(postEntity -> postEntityMapper.mapPostEntityToPostDto(postEntity))
                    .collect(Collectors.toList());
+           return postDtos;
         }
         return null;
     }

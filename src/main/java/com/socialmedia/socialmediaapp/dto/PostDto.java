@@ -1,6 +1,6 @@
 package com.socialmedia.socialmediaapp.dto;
 import lombok.*;
-/*now this act as a proxy between all units*/
+/*now this act as a proxy between all units  Data Transfer Object*/
 @Data
 public class PostDto {
     private Long id;

@@ -10,10 +10,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/api/posts")
 public class PostController {
+
     @Autowired
     private PostService postService;
     /*get all posts*/
-    //v1/api/posts
     @GetMapping
     public List<PostDto> fetchAllPosts()
     {
@@ -21,7 +21,6 @@ public class PostController {
     }
 
     /*get post by Id*/
-    //v1/api/posts/{postId}
     @GetMapping("/{postId}")
     public PostDto fetchPostById(@PathVariable long postId)
     {

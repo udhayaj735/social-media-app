@@ -1,10 +1,14 @@
 package com.socialmedia.socialmediaapp.service;
 
 import com.socialmedia.socialmediaapp.dto.PostDto;
+import com.socialmedia.socialmediaapp.payload.PostResponse;
+
 import java.util.List;
 
 
 public interface PostService {
+
+    PostResponse getAllPosts(int pageNo,int pageSize);
 
     /*1.GET all the posts*/
     List<PostDto> getAllPosts();

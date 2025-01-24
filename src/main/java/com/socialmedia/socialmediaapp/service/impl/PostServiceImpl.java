@@ -3,12 +3,16 @@ package com.socialmedia.socialmediaapp.service.impl;
 import com.socialmedia.socialmediaapp.dto.PostDto;
 import com.socialmedia.socialmediaapp.entity.PostEntity;
 import com.socialmedia.socialmediaapp.exceptions.ResourceNotFoundException;
+import com.socialmedia.socialmediaapp.payload.PostResponse;
 import com.socialmedia.socialmediaapp.repositary.PostRepository;
 import com.socialmedia.socialmediaapp.service.PostService;
 import com.socialmedia.socialmediaapp.utils.PostEntityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +29,28 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostEntityMapper postEntityMapper;
 
+
+    @Override
+    public PostResponse getAllPosts(int pageNo, int pageSize) {
+       Pageable pageable= PageRequest.of(pageNo,pageSize);
+        Page<PostEntity> postEntityList=postRepository.findAll(pageable);
+        if(postEntityList!=null)
+        {
+          List<PostDto> postDtoList=  postEntityList.stream()
+                    .map(postEntity -> this.postEntityMapper.mapPostEntityToPostDto(postEntity))
+                    .collect(Collectors.toList());
+         PostResponse postReponse= PostResponse.builder()
+                  .content(postDtoList)
+                  .pageNo(postEntityList.getNumber())
+                  .pageSize(postEntityList.getSize())
+                  .totalElements(postEntityList.getTotalElements())
+                  .totalPages(postEntityList.getTotalPages())
+                  .isLastPage(postEntityList.isLast())
+                  .build();
+          return postReponse;
+        }
+        return null;
+    }
 
     @Override
     public List<PostDto> getAllPosts() {

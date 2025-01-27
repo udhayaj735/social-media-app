@@ -10,6 +10,7 @@ public interface PostService {
 
     PostResponse getAllPosts(int pageNo,int pageSize);
 
+    PostResponse getAllPosts(int pageNo,int pageSize,String sortBy,String sortDirection);
     /*1.GET all the posts*/
     List<PostDto> getAllPosts();
 

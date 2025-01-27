@@ -16,10 +16,12 @@ public class PostControllerV2 {
     private PostService postService;
 
     @GetMapping
-    public PostResponse fetchAllPosts(@RequestParam(value="pageNo",defaultValue="0",required = false) int pageNo,
-                                      @RequestParam(value = "pageSize",defaultValue = "0",required = false) int pageSize)
+    public PostResponse fetchAllPosts(@RequestParam(value = "pageNo",defaultValue="0",required = false) int pageNo,
+                                      @RequestParam(value = "pageSize",defaultValue = "0",required = false) int pageSize,
+                                      @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
+                                      @RequestParam(value = "sortDirection",defaultValue = "ASC",required = false) String sortDirection)
     {
-        return this.postService.getAllPosts(pageNo,pageSize);
+        return this.postService.getAllPosts(pageNo,pageSize,sortBy,sortDirection);
     }
 
 }

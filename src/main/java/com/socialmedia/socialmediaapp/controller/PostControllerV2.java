@@ -16,7 +16,7 @@ public class PostControllerV2 {
     private PostService postService;
 
     @GetMapping
-    public PostResponse fetchallPosts(@RequestParam(value="pageNo",defaultValue="0",required = false) int pageNo,
+    public PostResponse fetchAllPosts(@RequestParam(value="pageNo",defaultValue="0",required = false) int pageNo,
                                       @RequestParam(value = "pageSize",defaultValue = "0",required = false) int pageSize)
     {
         return this.postService.getAllPosts(pageNo,pageSize);

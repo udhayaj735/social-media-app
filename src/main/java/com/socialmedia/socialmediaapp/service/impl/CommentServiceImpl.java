@@ -8,15 +8,17 @@ import com.socialmedia.socialmediaapp.repository.CommentRepository;
 import com.socialmedia.socialmediaapp.repository.PostRepository;
 import com.socialmedia.socialmediaapp.service.CommentService;
 import com.socialmedia.socialmediaapp.utils.CommentEntityMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(CommentServiceImpl.class);
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
@@ -85,12 +87,74 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto updateCommentForPost(long postId, CommentDto commentDto, long commentId) {
-        return null;
+    public CommentDto updateCommentByPostIdAndCommentId(long postId, long commentId, CommentDto commentDto) {
+
+        //Fetch post Entity using post Repositary from post id
+        PostEntity postEntity= this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post Id Not Found :: "+postId));
+        //Fetch comment Entity using comment Repositary from comment id
+        CommentEntity commentEntity=this.commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment Id Not Found::"+commentId));
+
+        //validate comment belong to that particular post
+        if(commentEntity!=null && postEntity!=null)
+        {
+            if(!commentEntity.getPostEntity().getId().equals(postEntity.getId()))
+            {
+                throw new RuntimeException("Bad Request :: Comment Not Found");
+            }
+        }
+        //if valid then update old comment details with new comment Dto
+        if(commentEntity!=null&& commentDto!=null){
+            commentEntity.setEmail(commentDto.getEmail());
+            commentEntity.setUserName(commentDto.getUserName());
+            commentEntity.setBody(commentDto.getBody());
+        }
+        //save the new comment entity
+        CommentEntity newlySavedCommentEntity=this.commentRepository.save(commentEntity);
+
+        //Return newly updated comment
+
+        return this.commentEntityMapper.mapCommentEntityToCommentDto(newlySavedCommentEntity);
     }
 
     @Override
-    public boolean deleteCommentByIdAndPostId(long postId, long commentIdToBeDeleted) {
-        return false;
+    public String deleteCommentByPostIdAndCommentId(long postId, long commentId) {
+        //Fetch post Entity using post Repositary from post id
+        PostEntity postEntity= this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post Id Not Found :: "+postId));
+        //Fetch comment Entity using comment Repositary from comment id
+        CommentEntity commentEntity=this.commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment Id Not Found::"+commentId));
+
+        //validate comment belong to that particular post
+        if(commentEntity!=null && postEntity!=null)
+        {
+            if(!commentEntity.getPostEntity().getId().equals(postEntity.getId()))
+            {
+                throw new RuntimeException("Bad Request :: Comment Not Found");
+            }
+        }
+        this.commentRepository.delete(commentEntity);
+        return "Successfully Deleted comment: "+  commentId;
+    }
+
+    @Override
+    public String deleteAllCommentForThePostId(long postId) {
+        this.commentRepository.deleteByPostId(postId);
+        return "Successfully Deleted comments for the post Id: "+  postId;
+    }
+
+    @Override
+    public List<CommentDto> getCommentByPostIdAndUserName(long postId,String userName) {
+        //Validtae or fetch the username from comment table of DB
+        List<CommentEntity> CommentsByUserName = this.commentRepository.findByUserName(userName);
+
+        PostEntity postEntity= this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post Id Not Found :: "+postId));
+
+
+        if(!CommentsByUserName.isEmpty()&&postEntity!=null)
+        {
+            return CommentsByUserName.stream()
+                    .map(commentEntity -> this.commentEntityMapper.mapCommentEntityToCommentDto(commentEntity))
+                    .toList();
+        }
+        throw new RuntimeException("Bad Request");
     }
 }

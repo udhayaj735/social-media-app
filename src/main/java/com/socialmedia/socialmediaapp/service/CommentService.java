@@ -20,8 +20,15 @@ public interface CommentService {
     CommentDto createCommentForPost(long postId,CommentDto CommentToBeCreated);
 
     /*4.Update Existing Comment for the post*/
-    CommentDto updateCommentForPost(long postId,CommentDto commentDto, long commentId);
+    CommentDto updateCommentByPostIdAndCommentId(long postId,long commentId,CommentDto commentDto);
 
-    /*5.Delete Comment for the post*/
-    boolean deleteCommentByIdAndPostId(long postId,long commentIdToBeDeleted);
+    /*5.Delete Particular Comment for the post Id and comment Id */
+    String deleteCommentByPostIdAndCommentId(long postId,long commentId);
+
+      /*6.Delete all Comments  for the post Id */
+    String deleteAllCommentForThePostId(long postId);
+
+    /*7. Get Comment By UserName*/
+    List<CommentDto> getCommentByPostIdAndUserName(long postId,String userName);
+
 }

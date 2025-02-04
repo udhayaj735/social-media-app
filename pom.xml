@@ -79,6 +79,14 @@
             <version>3.3.5</version>
         </dependency>
 
+
+        <!--Model Mapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

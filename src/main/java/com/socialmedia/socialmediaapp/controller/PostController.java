@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,8 @@ public class PostController {
     })
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto> fetchPostById(
-            @Parameter(description = "ID of the post to be fetched", required = true) @PathVariable long postId) {
+            @Parameter(description = "ID of the post to be fetched", required = true)
+            @PathVariable long postId) {
         PostDto post = this.postService.getPostById(postId);
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
@@ -75,7 +78,9 @@ public class PostController {
     })
     @PostMapping
     public ResponseEntity<PostDto> savePost(
-            @Parameter(description = "Post data to be created", required = true) @RequestBody PostDto postDto) {
+            @Parameter(description = "Post data to be created", required = true)
+            @Valid
+            @RequestBody PostDto postDto) {
         PostDto createdPost = this.postService.createPost(postDto);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
@@ -96,7 +101,9 @@ public class PostController {
     })
     @PutMapping("/{postId}")
     public ResponseEntity<PostDto> updatePost(
-            @Parameter(description = "Updated post data", required = true) @RequestBody PostDto postDtoToBeUpdated,
+            @Parameter(description = "Updated post data", required = true)
+            @Valid
+            @RequestBody PostDto postDtoToBeUpdated,
             @Parameter(description = "ID of the post to be updated", required = true) @PathVariable long postId) {
         PostDto updatedPost = this.postService.updatePost(postDtoToBeUpdated, postId);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);

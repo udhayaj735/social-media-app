@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,8 @@ public class CommentController {
     })
     @GetMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDto> getCommentByPostIdAndCommentId(
-            @Parameter(description = "ID of the post", required = true) @PathVariable long postId,
+            @Parameter(description = "ID of the post", required = true)
+            @PathVariable long postId,
             @Parameter(description = "ID of the comment", required = true) @PathVariable long commentId) {
         CommentDto commentDtoOfPostIdAndCommentId = this.commentService.getCommentByPostIdAndCommentId(postId, commentId);
         return new ResponseEntity<>(commentDtoOfPostIdAndCommentId, HttpStatus.OK);
@@ -98,7 +100,9 @@ public class CommentController {
     })
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentDto> createComment(
-            @Parameter(description = "ID of the post", required = true) @PathVariable long postId,
+            @Parameter(description = "ID of the post", required = true)
+            @Valid
+            @PathVariable long postId,
             @Parameter(description = "Comment data to be created", required = true) @RequestBody CommentDto commentDto) {
         CommentDto saveCommentEntity = this.commentService.createCommentForPost(postId, commentDto);
         return new ResponseEntity<>(saveCommentEntity, HttpStatus.CREATED);
@@ -121,7 +125,9 @@ public class CommentController {
     })
     @PutMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(
-            @Parameter(description = "ID of the post", required = true) @PathVariable long postId,
+            @Parameter(description = "ID of the post", required = true)
+            @Valid
+            @PathVariable long postId,
             @Parameter(description = "ID of the comment", required = true) @PathVariable long commentId,
             @Parameter(description = "Updated comment data", required = true) @RequestBody CommentDto commentDto) {
         CommentDto updateCommentDto = this.commentService.updateCommentByPostIdAndCommentId(postId, commentId, commentDto);

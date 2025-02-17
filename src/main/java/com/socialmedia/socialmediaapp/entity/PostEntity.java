@@ -1,6 +1,8 @@
 package com.socialmedia.socialmediaapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -15,10 +17,19 @@ public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) /*for unique id*/
     private Long id;
+
+    @NotEmpty
+    @Size(min=3,message = "Post Title should have at least 3 Characters")
     @Column(name="title")
     private String title;
+
+    @NotEmpty
+    @Size(min=5,message = "Post Description should have at least 5 Characters")
     @Column(name="description")
     private String description;
+
+    @NotEmpty
+    @Size(min=7,message = "Post Content should have at least 7 Characters")
     @Column(name="content")
     private String content;
 

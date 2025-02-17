@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService {
     public PostDto getPostById(long id) {
         Optional<PostEntity> optionalEntity = this.postRepository.findById(id);
         return optionalEntity.map(postEntity -> postEntityMapper.mapPostEntityToPostDto(postEntity))
-                .orElseThrow(() -> new RuntimeException("Post not found by id:" + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found by id:" + id));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto updatePost(PostDto postDto, long postDtoToBeUpdated) {
         PostEntity postEntityToBeUpdated = this.postRepository.findById(postDtoToBeUpdated).orElseThrow(() ->
-                new RuntimeException("Post Id:" + postDtoToBeUpdated + " not found"));
+                new ResourceNotFoundException("Post Id:" + postDtoToBeUpdated + " not found"));
         postEntityToBeUpdated.setTitle(postDto.getTitle());
         postEntityToBeUpdated.setDescription(postDto.getDescription());
         postEntityToBeUpdated.setContent(postDto.getContent());

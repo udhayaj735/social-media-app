@@ -12,6 +12,7 @@ import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<List<PostDto>> fetchAllPosts() {
         logger.info("Fetching all posts");
         List<PostDto> posts = this.postService.getAllPosts();
@@ -56,6 +58,7 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+   @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto> fetchPostById(
             @Parameter(description = "ID of the post to be fetched", required = true)
@@ -77,6 +80,7 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PostDto> savePost(
             @Parameter(description = "Post data to be created", required = true)
             @Valid
@@ -100,6 +104,7 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping("/{postId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PostDto> updatePost(
             @Parameter(description = "Updated post data", required = true)
             @Valid
@@ -122,6 +127,7 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/{postId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deletePost(
             @Parameter(description = "ID of the post to be deleted", required = true) @PathVariable long postId) {
         Boolean isDeleted = this.postService.deletePostById(postId);
